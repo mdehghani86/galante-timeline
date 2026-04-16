@@ -1549,14 +1549,24 @@ const $countA     = document.getElementById('countAlumni');
 const $countG     = document.getElementById('countGpa');
 const panels      = Array.from(document.querySelectorAll('#stage .stage-panel'));
 
-/* Phases: 'intro' → 'mystery' → 'walking' → 'done'
+/* Phases: 'cover' → 'intro' → 'mystery' → 'walking' → 'done'
    Photos do NOT auto-rotate — every spacebar press advances one photo;
    when on the last photo of a year, the next press moves to the next year. */
-let phase       = 'intro';
+let phase       = 'cover';
 let forwardIdx  = -1;         // index into forwardOrder (-1 = no year active)
 let photoIdx    = 0;          // current photo index within the active year
 
-const m2007 = milestones.find(m => m.dataset.year === '2007');
+const m2007  = milestones.find(m => m.dataset.year === '2007');
+const $cover = document.getElementById('cover');
+
+/* First advance from cover: dismiss it and start the intro sequence */
+function dismissCover() {
+  $cover.classList.add('gone');
+  phase = 'intro';
+  runIntro();
+}
+/* Clicking anywhere on the cover advances (same as pressing →) */
+if ($cover) $cover.addEventListener('click', dismissCover);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -1722,7 +1732,8 @@ async function openTimeline() {
 
 /* PHASE 3: walk forward through years on each click */
 function advance() {
-  if (phase === 'intro') { openTimeline(); return; }
+  if (phase === 'cover')   { dismissCover(); return; }
+  if (phase === 'intro')   { openTimeline(); return; }
 
   if (phase === 'mystery') {
     // Reveal: "????" → "2007", mystery card fades out, Ed Galante photo slides in
@@ -1765,7 +1776,14 @@ function advance() {
 }
 
 function back() {
-  if (phase === 'intro' || phase === 'mystery') return;
+  if (phase === 'cover') return;
+  if (phase === 'intro') {
+    // Return to cover
+    $cover.classList.remove('gone');
+    phase = 'cover';
+    return;
+  }
+  if (phase === 'mystery') return;
 
   // Step back one photo within the current year if possible
   const imgs = activePanelImgs();
@@ -1891,7 +1909,8 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-window.addEventListener('load', () => { runIntro(); });
+/* Cover is shown first; runIntro kicks off only after the user dismisses the cover */
+window.addEventListener('load', () => { /* wait for first keypress/click on cover */ });
 
 /* ═══════════════════ Fullscreen toggle ═══════════════════ */
 const $fsBtn = document.getElementById('fsBtn');
