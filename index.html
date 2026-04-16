@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Galante Timeline — 8th Annual Graduation Ceremony</title>
+  <style>
+  :root {
+    --navy:        #2b4c5f;
+    --navy-dark:   #23404f;
+    --red:         #dc1f2e;
+    --red-deep:    #b4121f;
+    --gold:        #b08c4f;
+    --husky-gold:  #D4A017;
+    --cream:       #f3ebd9;
+    --white:       #ffffff;
+    --ink:         #1a2a33;
+    --muted:       #5a6b75;
+    --pill-dim:    #cbd3d8;
+    --pill-past:   #e47d87;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#0a0a0a; }
+  body {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ═══════════════════ DECK ═══════════════════ */
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 56.25vw;
+    max-height: 100vh;
+    max-width: 177.78vh;
+    box-shadow: 0 10px 60px rgba(0,0,0,0.35);
+    overflow: hidden;
+    background: var(--white);
+  }
+  .slide {
+    position: absolute; inset: 0;
+    background: var(--white);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 600ms ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  /* Elegant left sidebar — layered navy gradient + gold hairline + red blade */
+  .panel-left {
+    position: absolute; top:0; left:0; bottom:0;
+    width: 6.5%;
+    background:
+      linear-gradient(180deg, #1d3240 0%, #2b4c5f 38%, #2b4c5f 62%, #1d3240 100%);
+    z-index: 5;
+    box-shadow:
+      inset -1px 0 0 rgba(212,160,23,0.0),     /* placeholder for light edge */
+      0 0 40px rgba(0,0,0,0.12);
+  }
+  /* Gold hairline accent running down the inside edge */
+  .panel-left::before {
+    content: "";
+    position: absolute;
+    top: 8%; bottom: 8%;
+    right: 12%;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(212,160,23,0.9) 18%,
+      rgba(212,160,23,0.9) 82%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+  /* Red blade — skewed accent at the edge */
+  .panel-left::after {
+    content: "";
+    position: absolute; top:0; bottom:0; right:-2.3%;
+    width: 2.3%;
+    background: linear-gradient(180deg, var(--red-deep) 0%, var(--red) 50%, var(--red-deep) 100%);
+    transform: skewX(-8deg); transform-origin: top right;
+    box-shadow: 0 0 18px rgba(220,31,46,0.25);
+  }
+
+  /* Elegant bottom strip — cream gradient + gold hairline top + refined skewed blades */
+  .bottom-strip {
+    position: absolute; left:0; right:0; bottom:0;
+    height: 6.5%;
+    background: linear-gradient(180deg, var(--cream) 0%, #e8dcbb 100%);
+    z-index: 4;
+    overflow: hidden;
+    box-shadow:
+      inset 0 1px 0 rgba(212,160,23,0.6),
+      0 -3px 10px rgba(0,0,0,0.04);
+  }
+  .bottom-strip::before {
+    content: "";
+    position: absolute; left: 6.5%; top: -20%;
+    width: 20%; height: 140%;
+    background: linear-gradient(180deg, var(--red-deep) 0%, var(--red) 50%, var(--red-deep) 100%);
+    transform: skewX(-22deg);
+    box-shadow: 2px 0 12px rgba(220,31,46,0.18);
+  }
+  .bottom-strip::after {
+    content: "";
+    position: absolute; left: 25.5%; top: -20%;
+    width: 3.8%; height: 140%;
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-dark) 100%);
+    transform: skewX(-22deg);
+  }
+
+  /* Deck nav dots */
+  .deck-nav {
+    position: absolute;
+    bottom: 2.1%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 0.8vw;
+    z-index: 20;
+  }
+  .deck-nav button {
+    width: 0.85vw; height: 0.85vw;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    background: rgba(43,76,95,0.35);
+    cursor: pointer; padding: 0;
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .deck-nav button.on { background: var(--red); transform: scale(1.2); }
+
+  /* Replay button */
+  .replay {
+    position: absolute;
+    bottom: 9%; right: 3%;
+    z-index: 18;
+    background: var(--navy);
+    color: #fff; border: none;
+    padding: 0.65vw 1.3vw;
+    padding-right: calc(1.3vw + 0.22em);
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700; font-size: 0.72vw;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 400ms ease, transform 400ms ease, background 200ms ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  .replay.show { opacity: 1; transform: translateY(0); }
+  .replay:hover { background: var(--red); }
+
+  /* ═══════════════════ SLIDE 1: TIMELINE ═══════════════════ */
+
+/* PHOTO STAGE — 16:9 frame, centered */
+  .stage-wrap {
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    top: 4%;
+    height: 68%;
+    z-index: 3;
+  }
+  .stage {
+    position: relative;
+    width: 100%; height: 100%;
+    background: var(--navy-dark);
+    border-radius: 0.8vw;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25), 0 0 0 3px #fff, 0 0 0 5px var(--husky-gold);
+  }
+
+  /* Hero stats (intro — Class of 2026) */
+  .hero-stats {
+    position: absolute; inset: 0;
+    z-index: 5;
+    background: var(--white);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 700ms ease;
+  }
+  .hero-stats.gone { opacity: 0; pointer-events: none; }
+
+  .hero-label {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 1vw;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 2.4vw;
+    display: flex; align-items: center; gap: 1.2vw;
+    padding-left: 0.42em;
+    opacity: 0;
+    animation: stat-in 900ms ease 100ms forwards;
+  }
+  .hero-label::before, .hero-label::after {
+    content: ""; display: inline-block;
+    width: 3vw; height: 2px;
+    background: var(--husky-gold);
+  }
+
+  .hero-stats-row {
+    display: flex;
+    gap: 3.5vw;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .stat {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    animation: stat-in 900ms cubic-bezier(.2,.8,.2,1) forwards;
+    min-width: 10vw;
+    position: relative;
+  }
+  /* Hairline dividers between stats */
+  .stat + .stat::before {
+    content: "";
+    position: absolute;
+    left: -1.75vw;
+    top: 1.5vw;
+    width: 1px;
+    height: 7.5vw;
+    background: linear-gradient(to bottom, transparent 0%, rgba(176,140,79,0.45) 30%, rgba(176,140,79,0.45) 70%, transparent 100%);
+  }
+  .stat.s1 { animation-delay: 200ms; }
+  .stat.s2 { animation-delay: 400ms; }
+  .stat.s3 { animation-delay: 600ms; }
+  @keyframes stat-in { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .stat .num {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 10.5vw;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    display: block;
+    padding-bottom: 0.2vw;
+    font-variant-numeric: lining-nums proportional-nums;
+    font-feature-settings: "lnum" 1, "pnum" 1;
+  }
+  .stat.s1 .num { color: var(--red); }
+  .stat.s2 .num { color: var(--navy); }
+  .stat.s3 .num { color: var(--husky-gold); }
+  .stat .label {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.78vw;
+    color: var(--navy);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 1.4vw;              /* breathing room — no collision */
+    padding-left: 0.3em;
+    line-height: 1.35;
+  }
+  /* Subtle underline accent under each label */
+  .stat .label::after {
+    content: "";
+    display: block;
+    width: 1.6vw;
+    height: 2px;
+    background: var(--husky-gold);
+    margin: 0.6vw auto 0;
+    opacity: 0.6;
+  }
+
+  /* Stage panels — per year */
+  .stage-panel {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 800ms ease;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--navy-dark);
+  }
+  .stage-panel.on { opacity: 1; z-index: 2; }
+  .stage-panel .stage-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;             /* fill the frame; minor edge crop */
+    object-position: center 30%;   /* keep heads of group photos visible */
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .stage-panel .stage-img.show { opacity: 1; }
+
+  .stage-panel .placeholder {
+    position: relative; z-index: 2;
+    color: rgba(255,255,255,0.92);
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 2.4vw;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .stage-panel .placeholder .small {
+    display: block;
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-style: normal;
+    font-size: 0.65em;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    margin-top: 0.7vw;
+    color: var(--husky-gold);
+  }
+
+  /* ═══════════════ COVER SLIDE (very first thing shown) ═══════════════ */
+  .cover {
+    position: absolute; inset: 0;
+    z-index: 50;                     /* above everything on slide 1 */
+    overflow: hidden;
+    transition: opacity 800ms ease, transform 800ms ease;
+  }
+  .cover.gone {
+    opacity: 0;
+    transform: scale(1.02);
+    pointer-events: none;
+  }
+  .cover-bg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.35) saturate(0.85);
+  }
+  .cover-overlay {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.45) 90%),
+      linear-gradient(135deg, rgba(43,76,95,0.72) 0%, rgba(29,50,64,0.65) 100%);
+  }
+  .cover-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    color: #fff;
+    padding: 4vw;
+  }
+  .cover-kicker {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 600;
+    font-size: 0.78vw;
+    letter-spacing: 0.38em;
+    color: var(--husky-gold);
+    text-transform: uppercase;
+    padding-left: 0.38em;
+    margin-bottom: 1.3vw;
+    opacity: 0.95;
+  }
+  .cover-title {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    color: var(--husky-gold);
+    line-height: 0.85;
+    text-shadow: 0 6px 40px rgba(0,0,0,0.5);
+  }
+  .cover-title .decade {
+    font-size: 18vw;
+    letter-spacing: -0.04em;
+  }
+  .cover-title .th {
+    font-size: 3.5vw;
+    margin-left: 0.4vw;
+    letter-spacing: 0.06em;
+  }
+  .cover-subtitle {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 2.2vw;
+    color: #fff;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    margin-top: -0.8vw;
+    padding-left: 0.38em;
+    text-shadow: 0 3px 16px rgba(0,0,0,0.45);
+  }
+  .cover-separator {
+    width: 7vw;
+    height: 2px;
+    background: var(--husky-gold);
+    margin: 1.5vw 0;
+    box-shadow: 0 0 10px rgba(212,160,23,0.6);
+  }
+  .cover-main {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 2vw;
+    color: #fff;
+    text-shadow: 0 3px 14px rgba(0,0,0,0.5);
+  }
+  .cover-date {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.85vw;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--husky-gold);
+    margin-top: 1.5vw;
+    padding: 0.45vw 1.5vw;
+    padding-left: calc(1.5vw + 0.34em);
+    border: 1px solid rgba(212,160,23,0.65);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.25);
+  }
+  .cover-hint {
+    position: absolute;
+    bottom: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 600;
+    font-size: 0.7vw;
+    letter-spacing: 0.28em;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    animation: cover-hint-pulse 2s ease-in-out infinite;
+  }
+  @keyframes cover-hint-pulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.9; }
+  }
+
+  /* ── Mystery question panel (shown between axis-draw and 2007-reveal) ──
+     Layout: framed yearbook photo on the left, question on the right. */
+  .stage-panel.question-panel {
+    background:
+      radial-gradient(circle at 30% 50%, rgba(212,160,23,0.10) 0%, transparent 50%),
+      linear-gradient(160deg, #1d3240 0%, #2b4c5f 55%, #23404f 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2vw;
+  }
+  .question-panel .q-layout {
+    display: flex;
+    align-items: center;
+    gap: 4vw;
+  }
+  /* Framed square photo — vintage polaroid feel */
+  .question-panel .q-photo {
+    position: relative;
+    width: 17vw;
+    height: 17vw;
+    background: #f3ebd9;
+    padding: 0.7vw 0.7vw 2.5vw 0.7vw;    /* extra bottom padding for the caption strip */
+    box-shadow:
+      0 25px 50px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(212,160,23,0.4);
+    transform: rotate(-2.5deg);
+    transition: transform 400ms ease;
+  }
+  .question-panel .q-photo img {
+    width: 100%;
+    height: calc(100% - 0.2vw);
+    object-fit: cover;
+    filter: sepia(0.35) contrast(1.08) brightness(0.95);
+    display: block;
+  }
+  .question-panel .q-photo-caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0.3vw;
+    text-align: center;
+    color: var(--navy);
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.72vw;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    padding-left: 0.32em;
+  }
+  /* Question block on the right */
+  .question-panel .q-text-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .question-panel .q-mark {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 300;
+    font-size: 13vw;
+    line-height: 0.85;
+    color: var(--husky-gold);
+    letter-spacing: -0.05em;
+    text-shadow: 0 6px 40px rgba(212,160,23,0.4), 0 0 80px rgba(0,0,0,0.5);
+    animation: mystery-float 4s ease-in-out infinite;
+    margin-bottom: -1vw;     /* pull question closer */
+  }
+  @keyframes mystery-float {
+    0%, 100% { transform: translateY(0); opacity: 0.9; }
+    50%      { transform: translateY(-0.5vw); opacity: 1; }
+  }
+  .question-panel .q-text {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 2.4vw;
+    color: #fff;
+    letter-spacing: 0.01em;
+    text-shadow: 0 3px 14px rgba(0,0,0,0.4);
+  }
+
+  /* 2007 pill in mystery state — pulsing red with "????" */
+  .milestone.mystery .pill {
+    background: var(--red) !important;
+    color: #fff !important;
+    font-size: 1vw !important;
+    letter-spacing: 0.15em !important;
+    font-weight: 800 !important;
+    padding: 0.5vw 1.2vw !important;
+    min-width: 5.5vw !important;
+    border-radius: 999px !important;
+    animation: mystery-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes mystery-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 6px rgba(220,31,46,0.18), 0 10px 20px rgba(220,31,46,0.4);
+      transform: scale(1.1);
+    }
+    50% {
+      box-shadow: 0 0 0 11px rgba(220,31,46,0.28), 0 14px 28px rgba(220,31,46,0.55);
+      transform: scale(1.16);
+    }
+  }
+
+  /* ── 2020 Leadership Flowchart ── */
+  .flowchart {
+    position: absolute; inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    padding: 2vw;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(212,160,23,0.08) 0%, transparent 60%),
+      linear-gradient(160deg, #1d3240 0%, #2b4c5f 55%, #23404f 100%);
+  }
+  .flowchart .fc-title {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.82vw;
+    color: var(--husky-gold);
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    padding-left: 0.36em;
+    opacity: 0.9;
+  }
+  .flowchart .fc-root {
+    position: relative;
+    background: linear-gradient(135deg, var(--red-deep) 0%, var(--red) 60%);
+    color: #fff;
+    padding: 0.95vw 2.2vw;
+    border-radius: 999px;
+    box-shadow:
+      0 10px 28px rgba(220,31,46,0.4),
+      inset 0 0 0 1px rgba(255,255,255,0.18);
+    text-align: center;
+  }
+  .flowchart .fc-root .title {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 1.35vw;
+    letter-spacing: 0.02em;
+  }
+  .flowchart .fc-root .sub {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-size: 0.66vw;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.88;
+    margin-top: 0.15vw;
+    padding-left: 0.22em;
+  }
+  /* Tree connector — vertical stub + horizontal spreader */
+  .flowchart .fc-tree {
+    position: relative;
+    width: 72%;
+    height: 2.5vw;
+    margin-top: -0.2vw;
+  }
+  .flowchart .fc-tree::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 50%;
+    left: 50%;
+    width: 2px;
+    background: rgba(212,160,23,0.65);
+    border-radius: 1px;
+    transform: translateX(-50%);
+  }
+  .flowchart .fc-tree::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16.666%; right: 16.666%;
+    height: 2px;
+    background: rgba(212,160,23,0.65);
+    border-radius: 1px;
+  }
+  .flowchart .fc-teams {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.2vw;
+    width: 72%;
+    margin-top: -0.3vw;
+  }
+  .flowchart .fc-teams::before,
+  .flowchart .fc-teams::after,
+  .flowchart .fc-teams .mid-stub {
+    content: "";
+    position: absolute;
+    top: -1vw;
+    width: 2px;
+    height: 1vw;
+    background: rgba(212,160,23,0.65);
+    border-radius: 1px;
+  }
+  .flowchart .fc-teams::before { left: calc(16.666% - 1px); }
+  .flowchart .fc-teams .mid-stub { left: 50%; transform: translateX(-50%); }
+  .flowchart .fc-teams::after { right: calc(16.666% - 1px); }
+
+  .flowchart .fc-team {
+    position: relative;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(212,160,23,0.35);
+    border-radius: 0.7vw;
+    padding: 0.9vw 0.9vw 0.8vw;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+  }
+  .flowchart .fc-team .num {
+    position: absolute;
+    top: -0.7vw; left: 50%;
+    transform: translateX(-50%);
+    width: 1.6vw; height: 1.6vw;
+    border-radius: 50%;
+    background: var(--husky-gold);
+    color: var(--navy-dark);
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.85vw;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(212,160,23,0.45);
+  }
+  .flowchart .fc-team .name {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.95vw;
+    letter-spacing: 0.02em;
+    margin-top: 0.5vw;
+    line-height: 1.15;
+  }
+  .flowchart .fc-team .desc {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 400;
+    font-size: 0.65vw;
+    opacity: 0.8;
+    margin-top: 0.3vw;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  /* Scholarship badges below */
+  .flowchart .fc-scholarships {
+    display: flex;
+    gap: 0.9vw;
+    margin-top: 0.8vw;
+  }
+  .flowchart .fc-badge {
+    background: linear-gradient(135deg, var(--husky-gold) 0%, #b87e0f 100%);
+    color: #fff;
+    padding: 0.45vw 1.1vw;
+    padding-left: calc(1.1vw + 0.18em);
+    border-radius: 999px;
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 0.72vw;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    box-shadow: 0 6px 14px rgba(212,160,23,0.35);
+    white-space: nowrap;
+  }
+
+  /* Slideshow dots (bottom-center of stage, auto-fades in when >1 photo) */
+  .slide-dots {
+    position: absolute;
+    bottom: 1.2vw;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 12;
+    display: flex;
+    gap: 0.45vw;
+    padding: 0.4vw 0.9vw;
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+  }
+  .slide-dots.on { opacity: 1; }
+  .slide-dots .dot {
+    width: 0.55vw;
+    height: 0.55vw;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.42);
+    transition: background 400ms ease, transform 400ms ease, width 400ms ease;
+  }
+  .slide-dots .dot.active {
+    background: var(--husky-gold);
+    transform: scale(1.25);
+  }
+
+  /* Year badge (top-left of stage) */
+  .stage-badge {
+    position: absolute;
+    top: 1.1vw; left: 1.1vw;
+    z-index: 10;
+    background: var(--red);
+    color: #fff;
+    padding: 0.45vw 1vw;
+    padding-left: calc(1vw + 0.18em);
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 800;
+    font-size: 1.2vw;
+    letter-spacing: 0.18em;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(220,31,46,0.4);
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .stage-badge.on { opacity: 1; transform: translateY(0); }
+
+  /* Caption bar */
+  .stage-caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 0.9vw 1.4vw;
+    z-index: 10;
+    background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+  .stage-caption.on { opacity: 1; }
+  .stage-caption .cap-title {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 2vw;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+  }
+  .stage-caption .cap-sub {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-size: 0.9vw;
+    color: rgba(255,255,255,0.9);
+    margin-top: 0.3vw;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+  }
+
+  /* FLOATING 2026 pill — transition element */
+  .floating-pill {
+    position: absolute;
+    top: 36%;
+    left: 60%;
+    transform: translate(-50%, -50%) scale(3.2);
+    z-index: 25;
+    background: var(--navy);
+    color: #fff;
+    padding: 0.45vw 1.2vw;
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 800;
+    font-size: 1vw;
+    letter-spacing: 0.05em;
+    border-radius: 999px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition:
+      opacity 500ms ease,
+      top 1200ms cubic-bezier(.65,.0,.25,1),
+      left 1200ms cubic-bezier(.65,.0,.25,1),
+      transform 1200ms cubic-bezier(.65,.0,.25,1),
+      background 600ms ease;
+    pointer-events: none;
+  }
+  .floating-pill.show { opacity: 1; }
+  .floating-pill.docked {
+    /* Matches the real 2026 milestone position:
+       timeline-area is left:9% right:3% (width 88%),
+       2026 milestone is left:96.5% inside it → slide-x = 9% + 96.5% × 88% ≈ 93.9%
+       timeline-area is top:73% bottom:8% (height 19%),
+       milestone top:50% → slide-y = 73% + 50% × 19% = 82.5% */
+    top: 82.5%;
+    left: 93.9%;
+    transform: translate(-50%, -50%) scale(1);
+    background: var(--navy);
+  }
+
+  /* TIMELINE */
+  .timeline-area {
+    position: absolute;
+    left: 9%; right: 3%;
+    top: 73%;
+    bottom: 8%;
+    z-index: 3;
+  }
+  .axis {
+    position: absolute;
+    left: 1.5%; right: 1.5%;
+    top: 50%;
+    height: 3px;
+    background: var(--navy);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 1400ms cubic-bezier(.65,.0,.25,1);
+    border-radius: 2px;
+  }
+  .axis.draw { transform: scaleX(1); }
+  .axis::before {
+    content: "";
+    position: absolute;
+    left: -5px; top: -3px;
+    width: 10px; height: 10px;
+    background: var(--navy);
+    border-radius: 50%;
+  }
+
+  .milestone {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer;
+  }
+  .pill {
+    position: relative;
+    min-width: 3.6vw;
+    padding: 0.4vw 0.75vw;
+    background: var(--pill-dim);
+    color: var(--navy);
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 800;
+    font-size: 0.9vw;
+    letter-spacing: 0.03em;
+    border-radius: 999px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    opacity: 0;
+    transform: scale(0.3);
+    transition:
+      opacity 500ms cubic-bezier(.2,1.4,.3,1),
+      transform 500ms cubic-bezier(.2,1.4,.3,1),
+      min-width 420ms cubic-bezier(.65,.0,.25,1),
+      width 420ms cubic-bezier(.65,.0,.25,1),
+      height 420ms cubic-bezier(.65,.0,.25,1),
+      padding 420ms cubic-bezier(.65,.0,.25,1),
+      font-size 420ms cubic-bezier(.65,.0,.25,1),
+      color 420ms ease,
+      background 300ms ease,
+      border-radius 420ms ease,
+      box-shadow 300ms ease;
+  }
+  .milestone.revealed .pill { opacity: 1; transform: scale(1); }
+
+  /* Only 2007 (first) and 2026 (present) stay as full labeled pills.
+     All middle years collapse to a small circle when not active. */
+  .milestone:not([data-year="2007"]):not(.present):not(.active) .pill {
+    min-width: 0.7vw;
+    width: 0.7vw;
+    height: 0.7vw;
+    padding: 0;
+    font-size: 0;
+    color: transparent;
+    letter-spacing: 0;
+    border-radius: 50%;
+    background: var(--pill-dim);
+  }
+  /* Past middle-year dots — red tint so presenter can see how far we've come */
+  .milestone:not([data-year="2007"]):not(.present).past:not(.active) .pill {
+    background: var(--red);
+    opacity: 0.55;
+  }
+
+  /* Active middle-year: expand from dot back to a full red pill */
+  .milestone.active .pill,
+  .milestone:hover.revealed .pill {
+    background: var(--red);
+    color: #fff;
+    box-shadow: 0 0 0 5px rgba(220,31,46,0.18), 0 10px 20px rgba(220,31,46,0.42);
+    transform: scale(1.22);
+  }
+
+  /* Past state for 2007 (anchor) — red */
+  .milestone[data-year="2007"].past:not(.active) .pill {
+    background: var(--pill-past);
+    color: #fff;
+    opacity: 0.88;
+  }
+
+  /* 2026 (present anchor) — always navy pill */
+  .milestone.present .pill { background: var(--navy); color: #fff; opacity: 0.82; }
+  .milestone.present.past .pill { background: var(--navy); opacity: 0.82; }
+  .milestone.present.active .pill,
+  .milestone.present:hover.revealed .pill {
+    background: var(--navy-dark);
+    opacity: 1;
+    box-shadow: 0 0 0 5px rgba(43,76,95,0.22), 0 10px 20px rgba(43,76,95,0.5);
+  }
+
+  /* Only the ACTIVE year's label is visible — others stay hidden */
+  .label-block {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 10vw;
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+  }
+  .milestone.above .label-block { bottom: calc(100% + 0.7vw); }
+  .milestone.below .label-block { top:    calc(100% + 0.7vw); }
+  .milestone.active .label-block { opacity: 1; }
+  /* In mystery state the label must stay hidden — otherwise it spoils the "????" reveal */
+  .milestone.mystery .label-block { opacity: 0 !important; }
+
+  .label-block .lbl {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 800;
+    font-size: 0.76vw;
+    color: var(--red);
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    margin-bottom: 0.15vw;
+  }
+  .label-block .sub {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-size: 0.64vw;
+    color: var(--navy);
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+  .milestone.present .label-block .lbl { color: var(--navy); }
+
+  /* Presenter hint */
+  .hint {
+    position: absolute;
+    bottom: 2.3%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 16;
+    display: flex; align-items: center; gap: 0.5vw;
+    opacity: 0;
+    transition: opacity 500ms ease;
+    pointer-events: none;
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    color: var(--navy);
+    font-size: 0.65vw;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .hint.on { opacity: 0.72; }
+  .hint .key {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 1.5vw;
+    padding: 0.2vw 0.45vw;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 0.25vw;
+    font-weight: 700;
+    letter-spacing: 0;
+    font-size: 0.75vw;
+  }
+  @keyframes hint-pulse {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(3px, 0); }
+  }
+  .hint.on .key:first-child { animation: hint-pulse 1.6s ease-in-out infinite; }
+
+  /* ═══════════════════ SLIDE 2: VOLUNTEER ═══════════════════ */
+  .title-wrap {
+    position: absolute;
+    top: 6.5%;
+    left: 10%;
+    z-index: 6;
+    opacity: 1;
+  }
+  .kicker {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 600;
+    font-size: 0.8vw;
+    color: var(--husky-gold);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.5vw;
+    display: flex; align-items: center; gap: 0.8vw;
+  }
+  .kicker::before, .kicker::after {
+    content: ""; display: inline-block;
+    width: 1.8vw; height: 1.5px;
+    background: var(--husky-gold);
+  }
+  .title {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 4.4vw;
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+  }
+  .title .red { color: var(--red); }
+  .title .navy { color: var(--navy); font-style: italic; font-weight: 600; }
+
+  .volunteer-wrap {
+    position: absolute;
+    left: 10%; right: 5%;
+    top: 23%; bottom: 10%;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 1.5vw;
+    z-index: 3;
+  }
+  .v-featured {
+    position: relative;
+    border-radius: 0.8vw;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25), 0 0 0 3px #fff, 0 0 0 5px var(--husky-gold);
+    background: var(--navy-dark);
+  }
+  .v-featured .v-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 800ms ease;
+  }
+  .v-featured .v-img.show { opacity: 1; }
+  .v-featured .v-cap {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 1vw 1.4vw;
+    background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%);
+    z-index: 5;
+  }
+  .v-featured .v-cap .title-s {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 2vw;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .v-featured .v-cap .sub-s {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-size: 0.9vw;
+    color: rgba(255,255,255,0.88);
+    margin-top: 0.3vw;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+  }
+  .v-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.8vw;
+  }
+  .v-thumb {
+    position: relative;
+    border-radius: 0.5vw;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.18), 0 0 0 2px #fff, 0 0 0 3px rgba(212,160,23,0.35);
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+  .v-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 600ms ease, filter 300ms ease;
+  }
+  .v-thumb::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: rgba(43,76,95,0.25);
+    transition: background 300ms ease;
+  }
+  .v-thumb:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.25), 0 0 0 2px #fff, 0 0 0 3px var(--husky-gold); }
+  .v-thumb:hover img { transform: scale(1.08); }
+  .v-thumb:hover::after { background: rgba(43,76,95,0); }
+  .v-thumb.active { box-shadow: 0 12px 28px rgba(220,31,46,0.35), 0 0 0 2px #fff, 0 0 0 4px var(--red); }
+  .v-thumb.active::after { background: rgba(0,0,0,0); }
+
+</style>
+</head>
+<body>
+
+<script>
+/* Simple password gate (client-side only — not cryptographic security, just basic gating) */
+(function(){
+  if (sessionStorage.getItem('galante_pw_ok') === '1') return;
+  const pw = prompt('Enter password to view the Galante Timeline:');
+  if (pw !== '2026') {
+    document.body.innerHTML =
+      '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#2b4c5f;color:#fff;font-family:\'Gill Sans MT\', sans-serif;font-size:1.2rem;letter-spacing:0.15em;text-transform:uppercase;">Access denied</div>';
+    throw new Error('pw');
+  }
+  sessionStorage.setItem('galante_pw_ok', '1');
+})();
+</script>
+
+<div class="deck" id="deck">
+
+  <!-- ═══════════════════ SLIDE 1 : TIMELINE ═══════════════════ -->
+  <section class="slide active" id="slide1">
+
+    <div class="panel-left"></div>
+
+    <!-- COVER SLIDE — full-screen title, shown first -->
+    <div class="cover" id="cover">
+      <img class="cover-bg" src="Images/Ed%20Galante%20and%20Fellows%202024%20(1).jpg" alt="">
+      <div class="cover-overlay"></div>
+      <div class="cover-content">
+        <div class="cover-kicker">Northeastern University &middot; Galante Engineering Business Program</div>
+        <div class="cover-title">
+          <span class="decade">10</span><span class="th">TH</span>
+        </div>
+        <div class="cover-subtitle">Anniversary</div>
+        <div class="cover-separator"></div>
+        <div class="cover-main">8<sup style="font-size:0.55em;font-style:normal;top:-0.6em;">th</sup> Annual Graduation Ceremony</div>
+        <div class="cover-date">April 16, 2026</div>
+      </div>
+      <div class="cover-hint">Press &rarr; to begin</div>
+    </div>
+
+    <!-- PHOTO STAGE -->
+    <div class="stage-wrap">
+      <div class="stage" id="stage">
+
+        <!-- Phase 1: Hero stats (Class of 2026) -->
+        <div class="hero-stats" id="heroStats">
+          <div class="hero-label">Class of 2026</div>
+          <div class="hero-stats-row">
+            <div class="stat s1">
+              <div class="num" id="countFellows">0</div>
+              <div class="label">Fellows<br>Graduating</div>
+            </div>
+            <div class="stat s2">
+              <div class="num" id="countAlumni">0</div>
+              <div class="label">Alumni<br>&nbsp;</div>
+            </div>
+            <div class="stat s3">
+              <div class="num" id="countGpa">0.0</div>
+              <div class="label">Record<br>GPA</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mystery panel — framed 1973 yearbook photo on the left, question on the right -->
+        <div class="stage-panel question-panel" data-year="mystery">
+          <div class="q-layout">
+            <div class="q-photo">
+              <img src="Images/2007_Ed_Galante_1973.jpg" alt="Ed Galante — 1973 yearbook">
+              <div class="q-photo-caption">Circa 1973</div>
+            </div>
+            <div class="q-text-block">
+              <div class="q-mark">?</div>
+              <div class="q-text">How did it all begin&hellip;</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Year panels (photos) -->
+        <div class="stage-panel" data-year="2007">
+          <img class="stage-img" src="Images/2007_Ed_Galante.jpg" alt="Edward Galante">
+        </div>
+
+        <div class="stage-panel" data-year="2013">
+          <img class="stage-img" src="Images/2013_Ed_and_Kris.jpg" alt="Ed Galante and Dr. Kris Jaeger">
+        </div>
+
+        <div class="stage-panel" data-year="2015">
+          <img class="stage-img" src="Images/First%20Galante%20Event%20Sep%2028%202015.JPG" alt="First Galante Event Sep 28 2015">
+          <img class="stage-img" src="Images/2015%20First%20Galante%20Batch%20.jpg" alt="First Galante batch 2015">
+          <img class="stage-img" src="Images/2015.jpg" alt="2015">
+          <img class="stage-img" src="Images/2015_%20A%20ll%20in%20the%20air%20Jump.jpeg" alt="All in the air jump">
+        </div>
+
+        <div class="stage-panel" data-year="2016">
+          <div class="placeholder">&ldquo;First Graduates&rdquo;<span class="small">Photos to come</span></div>
+        </div>
+
+        <div class="stage-panel" data-year="2017">
+          <div class="placeholder">&ldquo;Growth Year&rdquo;<span class="small">Photos to come</span></div>
+        </div>
+
+        <div class="stage-panel" data-year="2018">
+          <img class="stage-img" src="Images/First%20Galante%20Graduain%20Ceremony%20Luckt%20Strike%20(1).jpg" alt="First Galante Graduation — Lucky Strike">
+          <img class="stage-img" src="Images/First%20Galante%20Graduain%20Ceremony%20Luckt%20Strike%20(2).JPG" alt="First Galante Graduation — Lucky Strike">
+          <img class="stage-img" src="Images/First%20Galante%20Graduain%20Ceremony%20Luckt%20Strike%20(3).JPG" alt="First Galante Graduation — Lucky Strike">
+          <img class="stage-img" src="Images/2018_Galnte%20Group%20photo.jpg" alt="2018 Galante Group">
+          <img class="stage-img" src="Images/PWC%20Event%201.jpg" alt="PWC Event 2018">
+        </div>
+
+        <div class="stage-panel" data-year="2019">
+          <img class="stage-img" src="Images/2019%20Galanbte%20Student%20Advisory%20Board%20.jpg" alt="2019 Galante Student Advisory Board">
+          <img class="stage-img" src="Images/Galante%20INC%20board%20ifrst%20meetin%20June%2013%202019%20.jpg" alt="Galante INC Board First Meeting June 2019">
+        </div>
+
+        <div class="stage-panel" data-year="2020">
+          <!-- Slide 1 of 2020: Leadership Structure flowchart -->
+          <div class="stage-img flowchart">
+            <div class="fc-title">Galante Leadership Structure &middot; 2020</div>
+            <div class="fc-root">
+              <div class="title">Galante Fellows</div>
+              <div class="sub">Student Leadership</div>
+            </div>
+            <div class="fc-tree"></div>
+            <div class="fc-teams">
+              <span class="mid-stub"></span>
+              <div class="fc-team">
+                <div class="num">1</div>
+                <div class="name">Strategic Initiative</div>
+                <div class="desc">Vision &middot; Direction</div>
+              </div>
+              <div class="fc-team">
+                <div class="num">2</div>
+                <div class="name">Events &amp; Engagement</div>
+                <div class="desc">Programming &middot; Community</div>
+              </div>
+              <div class="fc-team">
+                <div class="num">3</div>
+                <div class="name">Partnership</div>
+                <div class="desc">Industry &middot; Outreach</div>
+              </div>
+            </div>
+            <div class="fc-scholarships">
+              <div class="fc-badge">Fichtel Family Scholarship</div>
+              <div class="fc-badge">Jim &amp; Amie Smith Scholarship</div>
+            </div>
+          </div>
+          <!-- Photo slides -->
+          <img class="stage-img" src="Images/PWC%20event%202%202020.JPG" alt="PWC Event 2020">
+          <img class="stage-img" src="Images/PWC%20event%202%202020_.JPG" alt="PWC Event 2020">
+          <img class="stage-img" src="Images/Presentaiton%20Competiton%202020.png" alt="Presentation Competition 2020">
+        </div>
+
+        <div class="stage-panel" data-year="2021">
+          <div class="placeholder">&ldquo;Resilience&rdquo;<span class="small">Photos to come</span></div>
+        </div>
+
+        <div class="stage-panel" data-year="2022">
+          <img class="stage-img" src="Images/Banquette%20Events%202022%20(1).jpg" alt="Banquette Events 2022">
+          <img class="stage-img" src="Images/Banquette%20Events%202022%20(2).jpg" alt="Banquette Events 2022">
+          <img class="stage-img" src="Images/Banquette%20Events%202022%20(3).jpg" alt="Banquette Events 2022">
+          <img class="stage-img" src="Images/Amazon%20Robotics.JPEG" alt="Amazon Robotics Visit">
+          <img class="stage-img" src="Images/Graduation%20Box.JPEG" alt="Graduation Box">
+          <img class="stage-img" src="Images/9--dinner-reception-ice-breaker_32875971747_o.jpg" alt="Dinner reception ice-breaker">
+          <img class="stage-img" src="Images/img_0216_49242887003_o.jpg" alt="Galante moment">
+          <img class="stage-img" src="Images/img_0361_49242886868_o.jpg" alt="Galante moment">
+        </div>
+
+        <div class="stage-panel" data-year="2023">
+          <img class="stage-img" src="Images/Cerem,oy%202023.JPG" alt="2023 Ceremony">
+          <img class="stage-img" src="Images/042023-AG-Galante-0017.JPG" alt="April 2023 Galante Event">
+          <img class="stage-img" src="Images/Dr.%20Kris%20Jaeger.JPG" alt="Dr. Kris Jaeger">
+        </div>
+
+        <div class="stage-panel" data-year="2024">
+          <img class="stage-img" src="Images/Ed%20Galante%20and%20Fellows%202024%20(1).jpg" alt="Ed Galante and Fellows 2024">
+          <img class="stage-img" src="Images/Ed%20Galante%20and%20Fellows%202024%20(2).jpg" alt="Ed Galante and Fellows 2024">
+        </div>
+
+        <div class="stage-panel" data-year="2025">
+          <img class="stage-img" src="Images/Galante%20Banquette.jpeg" alt="Galante Banquette 2025">
+        </div>
+
+        <div class="stage-panel" data-year="2026">
+          <div class="placeholder">&ldquo;Class of 2026&rdquo;<span class="small">8th Annual Ceremony</span></div>
+        </div>
+
+        <!-- Year badge + caption + dots -->
+        <div class="slide-dots" id="slideDots"></div>
+        <div class="stage-badge" id="stageBadge">2007</div>
+        <div class="stage-caption" id="stageCaption">
+          <div class="cap-title" id="capTitle">Initial Gift</div>
+          <div class="cap-sub" id="capSub">from Ed Galante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating 2026 pill for opening transition -->
+    <div class="floating-pill" id="floatingPill">2026</div>
+
+    <!-- TIMELINE -->
+    <div class="timeline-area" id="timelineArea">
+      <div class="axis" id="axis"></div>
+
+      <!-- 14 milestones: 2007, 2013, then 2015-2026 every year.
+           idx ascending chronologically; alternating above/below labels.
+           Spacing: 2007 → 2013 wide gap (feels like prologue); 2015 → 2026 even cadence. -->
+
+      <div class="milestone above" data-idx="0"  data-year="2007" style="left: 2%;">
+        <div class="pill">2007</div>
+        <div class="label-block">
+          <div class="lbl">Initial Gift</div>
+          <div class="sub">from Ed Galante</div>
+        </div>
+      </div>
+
+      <div class="milestone below" data-idx="1"  data-year="2013" style="left: 14%;">
+        <div class="pill">2013</div>
+        <div class="label-block">
+          <div class="lbl">Program Launched</div>
+          <div class="sub">Galante Scholars begin</div>
+        </div>
+      </div>
+
+      <div class="milestone above" data-idx="2"  data-year="2015" style="left: 27%;">
+        <div class="pill">2015</div>
+        <div class="label-block">
+          <div class="lbl">First Event</div>
+          <div class="sub">Inaugural cohort</div>
+        </div>
+      </div>
+
+      <div class="milestone below" data-idx="3"  data-year="2016" style="left: 33.5%;">
+        <div class="pill">2016</div>
+        <div class="label-block">
+          <div class="lbl">First Graduates</div>
+          <div class="sub">Inaugural class walks</div>
+        </div>
+      </div>
+
+      <div class="milestone above" data-idx="4"  data-year="2017" style="left: 40%;">
+        <div class="pill">2017</div>
+        <div class="label-block">
+          <div class="lbl">Growth Year</div>
+          <div class="sub">Cohort expands</div>
+        </div>
+      </div>
+
+      <div class="milestone below" data-idx="5"  data-year="2018" style="left: 46.5%;">
+        <div class="pill">2018</div>
+        <div class="label-block">
+          <div class="lbl">First SAB &amp; Ceremony</div>
+          <div class="sub">Advisory Board &middot; Lucky Strike</div>
+        </div>
+      </div>
+
+      <div class="milestone above" data-idx="6"  data-year="2019" style="left: 53%;">
+        <div class="pill">2019</div>
+        <div class="label-block">
+          <div class="lbl">First Official Ceremony</div>
+          <div class="sub">Awards + INC Board launched</div>
+        </div>
+      </div>
+
+      <div class="milestone below" data-idx="7"  data-year="2020" style="left: 59.5%;">
+        <div class="pill">2020</div>
+        <div class="label-block">
+          <div class="lbl">Leadership Structure</div>
+          <div class="sub">3 Teams &middot; Fichtel &amp; Smith Scholarships</div>
+        </div>
+      </div>
+
+      <div class="milestone above" data-idx="8"  data-year="2021" style="left: 66%;">
+        <div class="pill">2021</div>
+        <div class="label-block">
+          <div class="lbl">Kaprelien Competition</div>
+          <div class="sub">New student competition</div>
+        </div>
+      </div>
+
+      <div class="milestone below" data-idx="9"  data-year="2022" style="left: 72.5%;">
+        <div class="pill">2022</div>
+        <div class="label-block">
+          <div class="lbl">Banquet Tradition Begins</div>
+          <div class="sub">Amazon Robotics visit</div>
+        </div>
+      </div>
+
+      <div class="milestone above" data-idx="10" data-year="2023" style="left: 79%;">
+        <div class="pill">2023</div>
+        <div class="label-block">
+          <div class="lbl">Ceremony 2023</div>
+          <div class="sub">Honoring Dr. Kris Jaeger</div>
+        </div>
+      </div>
+
+      <div class="milestone below" data-idx="11" data-year="2024" style="left: 85.5%;">
+        <div class="pill">2024</div>
+        <div class="label-block">
+          <div class="lbl">100 Alumni &middot; All CoE</div>
+          <div class="sub">Ed Galante returns</div>
+        </div>
+      </div>
+
+      <div class="milestone above" data-idx="12" data-year="2025" style="left: 91%;">
+        <div class="pill">2025</div>
+        <div class="label-block">
+          <div class="lbl">Banquet 2025</div>
+          <div class="sub">Community celebrates</div>
+        </div>
+      </div>
+
+      <div class="milestone below present" data-idx="13" data-year="2026" style="left: 96.5%;">
+        <div class="pill">2026</div>
+        <div class="label-block">
+          <div class="lbl">Today</div>
+          <div class="sub">8th Annual Ceremony</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint" id="hint">
+      <span class="key">&rarr;</span> <span class="key">Space</span>
+      <span>to advance</span>
+    </div>
+
+    <div class="bottom-strip"></div>
+  </section>
+
+  <!-- ═══════════════════ SLIDE 2 : VOLUNTEER EVENTS ═══════════════════ -->
+  <section class="slide" id="slide2">
+
+    <div class="panel-left"></div>
+
+    <div class="title-wrap">
+      <div class="kicker">Community &middot; Service</div>
+      <div class="title"><span class="red">Giving</span> <span class="navy">Back</span></div>
+    </div>
+
+    <div class="volunteer-wrap">
+      <div class="v-featured" id="vFeatured">
+        <img class="v-img" data-caption="Community Servings" data-sub="Volunteering Event &middot; September 2022" src="Images/Vu,nteer%20Events/%5B2022-09-29%5D%20Community%20Servings%20Volunteering%20Event%20Photo.jpg" alt="Community Servings 2022">
+        <img class="v-img" data-caption="INFORMS Analytics"   data-sub="Conference Support &middot; 2023"            src="Images/Vu,nteer%20Events/2023%20INFORMS%20Analytics%20Conference%20(1).png" alt="INFORMS Analytics 2023">
+        <img class="v-img" data-caption="Baking Season"       data-sub="with Amie Smith"                              src="Images/Vu,nteer%20Events/Baking%20Seisosn%20with%20Amie%20Smith%20.jpg" alt="Baking Season with Amie Smith">
+        <img class="v-img" data-caption="Team Service"        data-sub="Microsoft Teams Volunteering &middot; 2021"   src="Images/Vu,nteer%20Events/MicrosoftTeams-image%20(1)%20(2).png" alt="Team Service">
+        <img class="v-img" data-caption="Community Moment"    data-sub="Galante Volunteers"                           src="Images/Vu,nteer%20Events/Image%20(3).jpeg" alt="Community Moment">
+        <img class="v-img" data-caption="In the Field"        data-sub="Galante Volunteers"                           src="Images/Vu,nteer%20Events/IMG_4308.JPG" alt="In the Field">
+        <img class="v-img" data-caption="Together"            data-sub="Galante Volunteers"                           src="Images/Vu,nteer%20Events/IMG_7725.JPEG" alt="Together">
+        <div class="v-cap">
+          <div class="title-s" id="vCapTitle">Community Servings</div>
+          <div class="sub-s"   id="vCapSub">Volunteering Event &middot; September 2022</div>
+        </div>
+      </div>
+
+      <div class="v-grid" id="vGrid"></div>
+    </div>
+
+    <div class="bottom-strip"></div>
+  </section>
+
+  <div class="deck-nav" id="deckNav">
+    <button class="on" data-slide="0" aria-label="Slide 1: Timeline"></button>
+    <button data-slide="1" aria-label="Slide 2: Volunteer Events"></button>
+  </div>
+
+  <button class="replay" id="replayBtn" type="button">&#x21bb; Replay</button>
+
+</div>
+
+<script>
+/* ═══════════════════ Deck navigation ═══════════════════ */
+const slides = [document.getElementById('slide1'), document.getElementById('slide2')];
+const dots   = document.querySelectorAll('#deckNav button');
+let currentSlide = 0;
+
+function goTo(i) {
+  currentSlide = (i + slides.length) % slides.length;
+  slides.forEach((s, n) => s.classList.toggle('active', n === currentSlide));
+  dots.forEach((d, n)   => d.classList.toggle('on', n === currentSlide));
+  if (currentSlide === 1) initVolunteer();
+}
+dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.slide)));
+
+/* ═══════════════════ Slide 1 : Timeline (presenter) ═══════════════════ */
+
+const milestones   = Array.from(document.querySelectorAll('#slide1 .milestone'));
+// Forward order (chronological 2007 → 2026)
+const forwardOrder = [...milestones].sort((a, b) => (+a.dataset.idx) - (+b.dataset.idx));
+
+const $axis       = document.getElementById('axis');
+const $hero       = document.getElementById('heroStats');
+const $stageBadge = document.getElementById('stageBadge');
+const $stageCap   = document.getElementById('stageCaption');
+const $capTitle   = document.getElementById('capTitle');
+const $capSub     = document.getElementById('capSub');
+const $hint       = document.getElementById('hint');
+const $replay     = document.getElementById('replayBtn');
+const $floating   = document.getElementById('floatingPill');
+const $countF     = document.getElementById('countFellows');
+const $countA     = document.getElementById('countAlumni');
+const $countG     = document.getElementById('countGpa');
+const panels      = Array.from(document.querySelectorAll('#stage .stage-panel'));
+
+/* Phases: 'intro' → 'mystery' → 'walking' → 'done'
+   Photos do NOT auto-rotate — every spacebar press advances one photo;
+   when on the last photo of a year, the next press moves to the next year. */
+let phase       = 'intro';
+let forwardIdx  = -1;         // index into forwardOrder (-1 = no year active)
+let photoIdx    = 0;          // current photo index within the active year
+
+const m2007 = milestones.find(m => m.dataset.year === '2007');
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function countUp(el, target, decimals, dur) {
+  const start = performance.now();
+  const ease  = t => 1 - Math.pow(1 - t, 3);
+  (function tick(now) {
+    const t = Math.min(1, (now - start) / dur);
+    const v = target * ease(t);
+    el.textContent = decimals ? v.toFixed(decimals) : Math.floor(v);
+    if (t < 1) requestAnimationFrame(tick);
+    else el.textContent = decimals ? target.toFixed(decimals) : target;
+  })(performance.now());
+}
+
+const $dots = document.getElementById('slideDots');
+
+function metaFor(m) {
+  return {
+    title: m.querySelector('.lbl').textContent,
+    sub:   m.querySelector('.sub').innerHTML,
+  };
+}
+
+function renderDots(count) {
+  $dots.innerHTML = '';
+  if (count <= 1) { $dots.classList.remove('on'); return; }
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('span');
+    d.className = 'dot';
+    $dots.appendChild(d);
+  }
+  $dots.classList.add('on');
+}
+function updateDot(idx) {
+  $dots.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function activePanelImgs() {
+  const m    = forwardOrder[forwardIdx];
+  if (!m) return [];
+  const year = m.dataset.year;
+  const panel = panels.find(p => p.dataset.year === String(year));
+  return panel ? Array.from(panel.querySelectorAll('.stage-img')) : [];
+}
+
+function showPhoto(i) {
+  const imgs = activePanelImgs();
+  if (imgs.length === 0) return;
+  imgs.forEach(img => img.classList.remove('show'));
+  const clamped = Math.max(0, Math.min(i, imgs.length - 1));
+  photoIdx = clamped;
+  imgs[clamped].classList.add('show');
+  updateDot(clamped);
+}
+
+function showYear(year, meta) {
+  panels.forEach(p => p.classList.toggle('on', p.dataset.year === String(year)));
+  const panel = panels.find(p => p.dataset.year === String(year));
+  if (!panel) return;
+  const imgs = panel.querySelectorAll('.stage-img');
+  imgs.forEach(i => i.classList.remove('show'));
+
+  renderDots(imgs.length);
+  if (imgs.length > 0) {
+    photoIdx = 0;
+    imgs[0].classList.add('show');
+    updateDot(0);
+  }
+
+  $stageBadge.textContent = year;
+  $stageBadge.classList.add('on');
+  if (meta) {
+    $capTitle.textContent = meta.title;
+    $capSub.innerHTML     = meta.sub;
+    $stageCap.classList.add('on');
+  } else {
+    $stageCap.classList.remove('on');
+  }
+}
+
+function setActiveMilestone(m) {
+  milestones.forEach(x => x.classList.remove('active'));
+  if (m) m.classList.add('active');
+}
+
+function resetTimeline() {
+  $axis.classList.remove('draw');
+  $hero.classList.remove('gone');
+  $floating.classList.remove('show','docked');
+  $hint.classList.remove('on');
+  $stageBadge.classList.remove('on');
+  $stageCap.classList.remove('on');
+  $replay.classList.remove('show');
+  if ($dots) { $dots.classList.remove('on'); $dots.innerHTML = ''; }
+  $countF.textContent = '0';
+  $countA.textContent = '0';
+  $countG.textContent = '0.0';
+  milestones.forEach(m => m.classList.remove('revealed','active','past','mystery'));
+  panels.forEach(p => {
+    p.classList.remove('on');
+    p.querySelectorAll('.stage-img').forEach(i => i.classList.remove('show'));
+  });
+  // restore 2007 pill text to "2007" (in case we were in mystery)
+  if (m2007) m2007.querySelector('.pill').textContent = '2007';
+  phase      = 'intro';
+  forwardIdx = -1;
+  photoIdx   = 0;
+}
+
+/* PHASE 1: show big intro stats */
+function runIntro() {
+  resetTimeline();
+  countUp($countF, 13,  0, 1200);
+  countUp($countA, 137, 0, 1400);
+  countUp($countG, 3.8, 1, 1400);
+  setTimeout(() => $hint.classList.add('on'),       1600);
+  phase = 'intro';
+}
+
+/* PHASE 2: opening animation
+   stats fade → floating 2026 flies to timeline right → axis draws R→L → 2007 activates */
+async function openTimeline() {
+  $hint.classList.remove('on');
+
+  // Fade hero stats
+  $hero.classList.add('gone');
+  // Bring up the floating 2026 pill (starts at center of stage)
+  $floating.classList.add('show');
+  await sleep(400);
+
+  // Dock the floating pill to timeline-right
+  $floating.classList.add('docked');
+  await sleep(350);
+
+  // Start drawing axis while pill is still traveling
+  $axis.classList.add('draw');
+  await sleep(900);
+
+  // Reveal all pills (dim) — timeline "opens up"
+  milestones.forEach(m => m.classList.add('revealed'));
+
+  // Hand off: hide floating pill, show real 2026 pill
+  await sleep(350);
+  $floating.classList.remove('show');
+
+  // ── MYSTERY STATE ──
+  // 2007 pill reveals as "????" (pulsing red) and stage shows the question card.
+  // The presenter narrates ("20 years ago… how did it all begin?") then presses →
+  if (m2007) {
+    m2007.querySelector('.pill').textContent = '????';
+    m2007.classList.add('mystery');
+  }
+  // Switch the stage to the question panel
+  panels.forEach(p => p.classList.toggle('on', p.dataset.year === 'mystery'));
+  if ($dots) { $dots.classList.remove('on'); $dots.innerHTML = ''; }
+  $stageBadge.classList.remove('on');
+  $stageCap.classList.remove('on');
+
+  phase = 'mystery';
+  $hint.classList.add('on');
+}
+
+/* PHASE 3: walk forward through years on each click */
+function advance() {
+  if (phase === 'intro') { openTimeline(); return; }
+
+  if (phase === 'mystery') {
+    // Reveal: "????" → "2007", mystery card fades out, Ed Galante photo slides in
+    if (m2007) {
+      m2007.querySelector('.pill').textContent = '2007';
+      m2007.classList.remove('mystery');
+    }
+    forwardIdx = 0;
+    setActiveMilestone(m2007);
+    showYear('2007', metaFor(m2007));
+    phase = 'walking';
+    return;
+  }
+
+  if (phase === 'walking' || phase === 'done') {
+    const imgs = activePanelImgs();
+    // Within a multi-photo year, step through photos first
+    if (imgs.length > 1 && photoIdx < imgs.length - 1) {
+      showPhoto(photoIdx + 1);
+      return;
+    }
+    // Otherwise, move to next year
+    if (forwardIdx < forwardOrder.length - 1) {
+      const prev = forwardOrder[forwardIdx];
+      prev.classList.add('past');
+      forwardIdx += 1;
+      const cur = forwardOrder[forwardIdx];
+      setActiveMilestone(cur);
+      showYear(cur.dataset.year, metaFor(cur));
+      if (forwardIdx === forwardOrder.length - 1) {
+        phase = 'done';
+        setTimeout(() => $replay.classList.add('show'), 600);
+        $hint.classList.remove('on');
+      }
+      return;
+    }
+    // Already at last photo of last year → go to Volunteer slide
+    if (phase === 'done') goTo(1);
+  }
+}
+
+function back() {
+  if (phase === 'intro' || phase === 'mystery') return;
+
+  // Step back one photo within the current year if possible
+  const imgs = activePanelImgs();
+  if (imgs.length > 1 && photoIdx > 0) {
+    showPhoto(photoIdx - 1);
+    return;
+  }
+  // From 2007 (forwardIdx=0), going back returns us to the mystery state
+  if (forwardIdx === 0) {
+    const cur = forwardOrder[0];
+    cur.classList.remove('active');
+    if (m2007) {
+      m2007.querySelector('.pill').textContent = '????';
+      m2007.classList.add('mystery');
+    }
+    panels.forEach(p => p.classList.toggle('on', p.dataset.year === 'mystery'));
+    if ($dots) { $dots.classList.remove('on'); $dots.innerHTML = ''; }
+    $stageBadge.classList.remove('on');
+    $stageCap.classList.remove('on');
+    forwardIdx = -1;
+    phase = 'mystery';
+    $replay.classList.remove('show');
+    $hint.classList.add('on');
+    return;
+  }
+  if (forwardIdx > 0) {
+    const cur = forwardOrder[forwardIdx];
+    cur.classList.remove('active');
+    forwardIdx -= 1;
+    const prev = forwardOrder[forwardIdx];
+    prev.classList.remove('past');
+    setActiveMilestone(prev);
+    showYear(prev.dataset.year, metaFor(prev));
+    phase = 'walking';
+    $replay.classList.remove('show');
+    $hint.classList.add('on');
+  }
+}
+
+/* Milestone click/hover — disabled during intro/mystery so hover can't spoil the reveal */
+milestones.forEach(m => {
+  m.addEventListener('mouseenter', () => {
+    if (phase === 'intro' || phase === 'mystery') return;
+    if (!m.classList.contains('revealed')) return;
+    showYear(m.dataset.year, metaFor(m));
+    setActiveMilestone(m);
+  });
+  m.addEventListener('click', () => {
+    if (phase === 'intro' || phase === 'mystery') { advance(); return; }
+    if (!m.classList.contains('revealed')) { advance(); return; }
+    showYear(m.dataset.year, metaFor(m));
+    setActiveMilestone(m);
+  });
+});
+
+$replay.addEventListener('click', () => {
+  if (currentSlide === 0) { resetTimeline(); runIntro(); }
+});
+
+/* ═══════════════════ Slide 2 : Volunteer ═══════════════════ */
+const $vFeatured = document.getElementById('vFeatured');
+const $vGrid     = document.getElementById('vGrid');
+const $vCapTitle = document.getElementById('vCapTitle');
+const $vCapSub   = document.getElementById('vCapSub');
+const vImgs      = Array.from($vFeatured.querySelectorAll('.v-img'));
+
+let vTimer = null;
+let vIdx   = 0;
+let volunteerInited = false;
+
+function showVFeatured(i) {
+  vImgs.forEach(x => x.classList.remove('show'));
+  vIdx = i;
+  const img = vImgs[i];
+  img.classList.add('show');
+  $vCapTitle.textContent = img.dataset.caption || '';
+  $vCapSub.innerHTML     = img.dataset.sub || '';
+  const thumbs = $vGrid.querySelectorAll('.v-thumb');
+  thumbs.forEach((t, n) => t.classList.toggle('active', n === i));
+}
+function startVRotation() {
+  stopVRotation();
+  vTimer = setInterval(() => showVFeatured((vIdx + 1) % vImgs.length), 4500);
+}
+function stopVRotation() { if (vTimer) { clearInterval(vTimer); vTimer = null; } }
+
+function initVolunteer() {
+  if (!volunteerInited) {
+    $vGrid.innerHTML = '';
+    vImgs.forEach((img, i) => {
+      const t = document.createElement('div');
+      t.className = 'v-thumb';
+      t.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+      t.addEventListener('click',      () => { showVFeatured(i); startVRotation(); });
+      t.addEventListener('mouseenter', () => { showVFeatured(i); stopVRotation(); });
+      t.addEventListener('mouseleave', () => { startVRotation(); });
+      $vGrid.appendChild(t);
+    });
+    volunteerInited = true;
+  }
+  showVFeatured(0);
+  startVRotation();
+}
+
+/* ═══════════════════ Global keyboard (presenter) ═══════════════════ */
+window.addEventListener('keydown', (e) => {
+  const ADV  = ['ArrowRight','ArrowDown','PageDown',' ','Enter'];
+  const BACK = ['ArrowLeft','ArrowUp','PageUp','Backspace'];
+  if (ADV.includes(e.key)) {
+    e.preventDefault();
+    if (currentSlide === 0) advance();
+    else if (currentSlide === 1) goTo(0);
+  } else if (BACK.includes(e.key)) {
+    e.preventDefault();
+    if (currentSlide === 0) back();
+    else if (currentSlide === 1) goTo(0);
+  } else if (e.key === 'r' || e.key === 'R') {
+    if (currentSlide === 0) { resetTimeline(); runIntro(); }
+  } else if (e.key === 'Home') {
+    goTo(0); resetTimeline(); runIntro();
+  } else if (e.key === 'End') {
+    goTo(1);
+  }
+});
+
+window.addEventListener('load', () => { runIntro(); });
+</script>
+</body>
+</html>
