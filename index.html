@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Galante Timeline — 8th Annual Graduation Ceremony</title>
+<title>Galante Timeline — 10-Year Anniversary</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23dc1f2e'/%3E%3Ctext x='50%25' y='52%25' font-family='Georgia,serif' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle' dominant-baseline='middle'%3EG%3C/text%3E%3C/svg%3E">
   <style>
   :root {
     --navy:        #2b4c5f;
@@ -130,6 +131,33 @@
     transition: background 200ms ease, transform 200ms ease;
   }
   .deck-nav button.on { background: var(--red); transform: scale(1.2); }
+
+  /* Fullscreen toggle — top-right corner of deck */
+  .fs-btn {
+    position: absolute;
+    top: 1.2vw;
+    right: 1.2vw;
+    z-index: 60;
+    width: 2vw;
+    height: 2vw;
+    min-width: 32px;
+    min-height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(43,76,95,0.78);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+    opacity: 0.55;
+    transition: opacity 200ms ease, background 200ms ease, transform 200ms ease;
+  }
+  .fs-btn:hover { opacity: 1; background: var(--red); transform: scale(1.08); }
+  .fs-btn svg { width: 55%; height: 55%; fill: currentColor; }
 
   /* Replay button */
   .replay {
@@ -343,16 +371,12 @@
     color: #fff;
     padding: 4vw;
   }
-  .cover-kicker {
-    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
-    font-weight: 600;
-    font-size: 0.78vw;
-    letter-spacing: 0.38em;
-    color: var(--husky-gold);
-    text-transform: uppercase;
-    padding-left: 0.38em;
-    margin-bottom: 1.3vw;
-    opacity: 0.95;
+  .cover-logo {
+    width: 28vw;
+    max-width: 520px;
+    height: auto;
+    margin-bottom: 2.4vw;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4)) brightness(1.1);
   }
   .cover-title {
     display: inline-flex;
@@ -1140,13 +1164,12 @@
       <img class="cover-bg" src="Images/Ed%20Galante%20and%20Fellows%202024%20(1).jpg" alt="">
       <div class="cover-overlay"></div>
       <div class="cover-content">
-        <div class="cover-kicker">Northeastern University &middot; Galante Engineering Business Program</div>
+        <img class="cover-logo" src="Images/Galante_Logo.png" alt="Galante Engineering Business Program">
         <div class="cover-title">
           <span class="decade">10</span><span class="th">TH</span>
         </div>
         <div class="cover-subtitle">Anniversary</div>
         <div class="cover-separator"></div>
-        <div class="cover-main">8<sup style="font-size:0.55em;font-style:normal;top:-0.6em;">th</sup> Annual Graduation Ceremony</div>
         <div class="cover-date">April 16, 2026</div>
       </div>
       <div class="cover-hint">Press &rarr; to begin</div>
@@ -1484,6 +1507,11 @@
   </div>
 
   <button class="replay" id="replayBtn" type="button">&#x21bb; Replay</button>
+
+  <!-- Fullscreen toggle -->
+  <button class="fs-btn" id="fsBtn" type="button" title="Toggle fullscreen (F)" aria-label="Fullscreen">
+    <svg viewBox="0 0 24 24"><path id="fsIcon" d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm16 0h-2v4h-4v2h6v-6z"/></svg>
+  </button>
 
 </div>
 
@@ -1864,6 +1892,31 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('load', () => { runIntro(); });
+
+/* ═══════════════════ Fullscreen toggle ═══════════════════ */
+const $fsBtn = document.getElementById('fsBtn');
+const $fsIcon = document.getElementById('fsIcon');
+const ICON_EXPAND   = 'M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm16 0h-2v4h-4v2h6v-6z';
+const ICON_COLLAPSE = 'M10 4v4H6V6h2V4h2zm4 0h2v2h2v2h-4V4zm0 16v-4h4v2h-2v2h-2zM4 14h6v6H8v-2H4v-4z';
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    (document.documentElement.requestFullscreen ||
+     document.documentElement.webkitRequestFullscreen ||
+     document.documentElement.msRequestFullscreen).call(document.documentElement);
+  } else {
+    (document.exitFullscreen ||
+     document.webkitExitFullscreen ||
+     document.msExitFullscreen).call(document);
+  }
+}
+$fsBtn.addEventListener('click', toggleFullscreen);
+document.addEventListener('fullscreenchange', () => {
+  $fsIcon.setAttribute('d', document.fullscreenElement ? ICON_COLLAPSE : ICON_EXPAND);
+});
+// Keyboard shortcut: F
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+});
 </script>
 </body>
 </html>
