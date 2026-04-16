@@ -903,6 +903,8 @@
     transition: opacity 500ms ease;
   }
   .stage-caption.on { opacity: 1; }
+  /* Captions on year photos hidden per request — 2007 reveal keeps its own narration block */
+  .stage-caption { display: none !important; }
   .stage-caption .cap-title {
     font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
     font-weight: 700;
@@ -1199,6 +1201,7 @@
     padding: 1vw 1.4vw;
     background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%);
     z-index: 5;
+    display: none;           /* community moments captions hidden too */
   }
   .v-stage .v-cap .title-s {
     font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
