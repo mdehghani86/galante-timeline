@@ -494,10 +494,14 @@
   .question-panel .q-photo img {
     width: 100%;
     height: calc(100% - 0.2vw);
-    object-fit: cover;
+    object-fit: contain;         /* show the FULL head, no cropping */
+    object-position: center top;
+    background: #efe6d1;
     filter: sepia(0.35) contrast(1.08) brightness(0.95);
     display: block;
   }
+  /* Caption on mystery yearbook removed per request */
+  .question-panel .q-photo-caption { display: none; }
   .question-panel .q-photo-caption {
     position: absolute;
     left: 0; right: 0; bottom: 0.3vw;
@@ -1381,7 +1385,6 @@
           <div class="reveal-layout">
             <div class="reveal-photo left">
               <img src="Images/2007_Ed_Galante_1973.jpg" alt="Ed Galante, 1973 yearbook">
-              <div class="reveal-caption">Circa 1973</div>
             </div>
             <div class="reveal-text">
               <div class="kicker">The Initial Gift</div>
@@ -1599,11 +1602,6 @@
       </div>
     </div>
 
-    <div class="hint" id="hint">
-      <span class="key">&rarr;</span> <span class="key">Space</span>
-      <span>to advance</span>
-    </div>
-
     <div class="bottom-strip"></div>
   </section>
 
@@ -1678,7 +1676,8 @@ const $stageBadge = document.getElementById('stageBadge');
 const $stageCap   = document.getElementById('stageCaption');
 const $capTitle   = document.getElementById('capTitle');
 const $capSub     = document.getElementById('capSub');
-const $hint       = document.getElementById('hint');
+/* Hint element removed from UI — keep a no-op stub so existing code doesn't break */
+const $hint = { classList: { add(){}, remove(){}, toggle(){} } };
 const $replay     = document.getElementById('replayBtn');
 const $floating   = document.getElementById('floatingPill');
 const $countF     = document.getElementById('countFellows');
