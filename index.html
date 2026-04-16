@@ -1164,6 +1164,79 @@
   .title .red { color: var(--red); }
   .title .navy { color: var(--navy); font-style: italic; font-weight: 600; }
 
+  /* Slide 2 — full-width slide-by-slide stage */
+  .v-stage-wrap {
+    position: absolute;
+    left: 14%; right: 14%;
+    top: 23%; bottom: 10%;
+    z-index: 3;
+  }
+  .v-stage {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 0.8vw;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25), 0 0 0 3px #fff, 0 0 0 5px var(--husky-gold);
+    background: var(--navy-dark);
+  }
+  .v-stage .v-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    opacity: 0;
+    transition: opacity 800ms ease;
+  }
+  .v-stage .v-img.show { opacity: 1; }
+  .v-stage .v-cap {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 1vw 1.4vw;
+    background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%);
+    z-index: 5;
+  }
+  .v-stage .v-cap .title-s {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 700;
+    font-size: 2vw;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .v-stage .v-cap .sub-s {
+    font-family: 'Gill Sans MT', 'Gill Sans Nova', 'Gill Sans', Seravek, 'Trebuchet MS', Calibri, sans-serif;
+    font-weight: 500;
+    font-size: 0.9vw;
+    color: rgba(255,255,255,0.88);
+    margin-top: 0.3vw;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+  }
+  /* Progress dots at bottom of stage */
+  .v-dots {
+    position: absolute;
+    bottom: 1.2vw;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 0.45vw;
+    padding: 0.4vw 0.9vw;
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 999px;
+  }
+  .v-dots .dot {
+    width: 0.55vw; height: 0.55vw;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.42);
+    cursor: pointer;
+    transition: background 300ms ease, transform 300ms ease;
+  }
+  .v-dots .dot.active { background: var(--husky-gold); transform: scale(1.25); }
+
+  /* Old grid styles (kept for backward compat — unused now) */
   .volunteer-wrap {
     position: absolute;
     left: 10%; right: 5%;
@@ -1354,14 +1427,6 @@
           <img class="stage-img" src="Images/2015_%20A%20ll%20in%20the%20air%20Jump.jpeg" alt="All in the air jump">
         </div>
 
-        <div class="stage-panel" data-year="2016">
-          <div class="placeholder">&ldquo;First Graduates&rdquo;<span class="small">Photos to come</span></div>
-        </div>
-
-        <div class="stage-panel" data-year="2017">
-          <div class="placeholder">&ldquo;Growth Year&rdquo;<span class="small">Photos to come</span></div>
-        </div>
-
         <div class="stage-panel" data-year="2018">
           <img class="stage-img" src="Images/First%20Galante%20Graduain%20Ceremony%20Luckt%20Strike%20(1).jpg" alt="First Galante Graduation — Lucky Strike">
           <img class="stage-img" src="Images/First%20Galante%20Graduain%20Ceremony%20Luckt%20Strike%20(2).JPG" alt="First Galante Graduation — Lucky Strike">
@@ -1411,10 +1476,6 @@
           <img class="stage-img" src="Images/PWC%20event%202%202020.JPG" alt="PWC Event 2020">
           <img class="stage-img" src="Images/PWC%20event%202%202020_.JPG" alt="PWC Event 2020">
           <img class="stage-img" src="Images/Presentaiton%20Competiton%202020.png" alt="Presentation Competition 2020">
-        </div>
-
-        <div class="stage-panel" data-year="2021">
-          <div class="placeholder">&ldquo;Resilience&rdquo;<span class="small">Photos to come</span></div>
         </div>
 
         <div class="stage-panel" data-year="2022">
@@ -1484,7 +1545,7 @@
         </div>
       </div>
 
-      <div class="milestone above" data-idx="2"  data-year="2015" style="left: 27%;">
+      <div class="milestone above" data-idx="2" data-year="2015" style="left: 26%;">
         <div class="pill">2015</div>
         <div class="label-block">
           <div class="lbl">First Event</div>
@@ -1492,23 +1553,7 @@
         </div>
       </div>
 
-      <div class="milestone below" data-idx="3"  data-year="2016" style="left: 33.5%;">
-        <div class="pill">2016</div>
-        <div class="label-block">
-          <div class="lbl">First Graduates</div>
-          <div class="sub">Inaugural class walks</div>
-        </div>
-      </div>
-
-      <div class="milestone above" data-idx="4"  data-year="2017" style="left: 40%;">
-        <div class="pill">2017</div>
-        <div class="label-block">
-          <div class="lbl">Growth Year</div>
-          <div class="sub">Cohort expands</div>
-        </div>
-      </div>
-
-      <div class="milestone below" data-idx="5"  data-year="2018" style="left: 46.5%;">
+      <div class="milestone below" data-idx="3" data-year="2018" style="left: 35%;">
         <div class="pill">2018</div>
         <div class="label-block">
           <div class="lbl">First SAB &amp; Ceremony</div>
@@ -1516,7 +1561,7 @@
         </div>
       </div>
 
-      <div class="milestone above" data-idx="6"  data-year="2019" style="left: 53%;">
+      <div class="milestone above" data-idx="4" data-year="2019" style="left: 44%;">
         <div class="pill">2019</div>
         <div class="label-block">
           <div class="lbl">First Official Ceremony</div>
@@ -1524,7 +1569,7 @@
         </div>
       </div>
 
-      <div class="milestone below" data-idx="7"  data-year="2020" style="left: 59.5%;">
+      <div class="milestone below" data-idx="5" data-year="2020" style="left: 53%;">
         <div class="pill">2020</div>
         <div class="label-block">
           <div class="lbl">Leadership Structure</div>
@@ -1532,15 +1577,7 @@
         </div>
       </div>
 
-      <div class="milestone above" data-idx="8"  data-year="2021" style="left: 66%;">
-        <div class="pill">2021</div>
-        <div class="label-block">
-          <div class="lbl">Kaprelien Competition</div>
-          <div class="sub">New student competition</div>
-        </div>
-      </div>
-
-      <div class="milestone below" data-idx="9"  data-year="2022" style="left: 72.5%;">
+      <div class="milestone above" data-idx="6" data-year="2022" style="left: 63%;">
         <div class="pill">2022</div>
         <div class="label-block">
           <div class="lbl">Banquet Tradition Begins</div>
@@ -1548,7 +1585,7 @@
         </div>
       </div>
 
-      <div class="milestone above" data-idx="10" data-year="2023" style="left: 79%;">
+      <div class="milestone below" data-idx="7" data-year="2023" style="left: 72%;">
         <div class="pill">2023</div>
         <div class="label-block">
           <div class="lbl">Ceremony 2023</div>
@@ -1556,7 +1593,7 @@
         </div>
       </div>
 
-      <div class="milestone below" data-idx="11" data-year="2024" style="left: 85.5%;">
+      <div class="milestone above" data-idx="8" data-year="2024" style="left: 81%;">
         <div class="pill">2024</div>
         <div class="label-block">
           <div class="lbl">100 Alumni &middot; All CoE</div>
@@ -1564,7 +1601,7 @@
         </div>
       </div>
 
-      <div class="milestone above" data-idx="12" data-year="2025" style="left: 91%;">
+      <div class="milestone below" data-idx="9" data-year="2025" style="left: 90%;">
         <div class="pill">2025</div>
         <div class="label-block">
           <div class="lbl">Banquet 2025</div>
@@ -1572,11 +1609,11 @@
         </div>
       </div>
 
-      <div class="milestone below present" data-idx="13" data-year="2026" style="left: 96.5%;">
+      <div class="milestone above present" data-idx="10" data-year="2026" style="left: 97%;">
         <div class="pill">2026</div>
         <div class="label-block">
           <div class="lbl">Today</div>
-          <div class="sub">8th Annual Ceremony</div>
+          <div class="sub">10-Year Anniversary</div>
         </div>
       </div>
     </div>
@@ -1595,12 +1632,13 @@
     <div class="panel-left"></div>
 
     <div class="title-wrap">
-      <div class="kicker">Community &middot; Service</div>
-      <div class="title"><span class="red">Giving</span> <span class="navy">Back</span></div>
+      <div class="kicker">Volunteer &middot; Social &middot; Together</div>
+      <div class="title"><span class="red">Community</span> <span class="navy">Moments</span></div>
     </div>
 
-    <div class="volunteer-wrap">
-      <div class="v-featured" id="vFeatured">
+    <!-- Slide-by-slide volunteer & social event viewer. Press → to advance. -->
+    <div class="v-stage-wrap">
+      <div class="v-stage" id="vFeatured">
         <img class="v-img" data-caption="Community Servings" data-sub="Volunteering Event &middot; September 2022" src="Images/Vu,nteer%20Events/%5B2022-09-29%5D%20Community%20Servings%20Volunteering%20Event%20Photo.jpg" alt="Community Servings 2022">
         <img class="v-img" data-caption="INFORMS Analytics"   data-sub="Conference Support &middot; 2023"            src="Images/Vu,nteer%20Events/2023%20INFORMS%20Analytics%20Conference%20(1).png" alt="INFORMS Analytics 2023">
         <img class="v-img" data-caption="Baking Season"       data-sub="with Amie Smith"                              src="Images/Vu,nteer%20Events/Baking%20Seisosn%20with%20Amie%20Smith%20.jpg" alt="Baking Season with Amie Smith">
@@ -1612,9 +1650,8 @@
           <div class="title-s" id="vCapTitle">Community Servings</div>
           <div class="sub-s"   id="vCapSub">Volunteering Event &middot; September 2022</div>
         </div>
+        <div class="v-dots" id="vDots"></div>
       </div>
-
-      <div class="v-grid" id="vGrid"></div>
     </div>
 
     <div class="bottom-strip"></div>
@@ -1965,49 +2002,46 @@ $replay.addEventListener('click', () => {
   if (currentSlide === 0) { resetTimeline(); runIntro(); }
 });
 
-/* ═══════════════════ Slide 2 : Volunteer ═══════════════════ */
-const $vFeatured = document.getElementById('vFeatured');
-const $vGrid     = document.getElementById('vGrid');
+/* ═══════════════════ Slide 2 : Community Moments — slide-by-slide ═══════════════════ */
+const $vStage    = document.getElementById('vFeatured');
+const $vDots     = document.getElementById('vDots');
 const $vCapTitle = document.getElementById('vCapTitle');
 const $vCapSub   = document.getElementById('vCapSub');
-const vImgs      = Array.from($vFeatured.querySelectorAll('.v-img'));
-
-let vTimer = null;
-let vIdx   = 0;
+const vImgs      = Array.from($vStage.querySelectorAll('.v-img'));
+let vIdx = 0;
 let volunteerInited = false;
 
-function showVFeatured(i) {
+function showVImage(i) {
   vImgs.forEach(x => x.classList.remove('show'));
-  vIdx = i;
-  const img = vImgs[i];
+  vIdx = Math.max(0, Math.min(i, vImgs.length - 1));
+  const img = vImgs[vIdx];
   img.classList.add('show');
   $vCapTitle.textContent = img.dataset.caption || '';
   $vCapSub.innerHTML     = img.dataset.sub || '';
-  const thumbs = $vGrid.querySelectorAll('.v-thumb');
-  thumbs.forEach((t, n) => t.classList.toggle('active', n === i));
+  $vDots.querySelectorAll('.dot').forEach((d, n) => d.classList.toggle('active', n === vIdx));
 }
-function startVRotation() {
-  stopVRotation();
-  vTimer = setInterval(() => showVFeatured((vIdx + 1) % vImgs.length), 4500);
+
+function advanceVolunteer() {
+  if (vIdx < vImgs.length - 1) showVImage(vIdx + 1);
+  else goTo(0);   // After last volunteer slide → return to timeline
 }
-function stopVRotation() { if (vTimer) { clearInterval(vTimer); vTimer = null; } }
+function backVolunteer() {
+  if (vIdx > 0) showVImage(vIdx - 1);
+  else goTo(0);   // Before first → back to timeline
+}
 
 function initVolunteer() {
   if (!volunteerInited) {
-    $vGrid.innerHTML = '';
-    vImgs.forEach((img, i) => {
-      const t = document.createElement('div');
-      t.className = 'v-thumb';
-      t.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
-      t.addEventListener('click',      () => { showVFeatured(i); startVRotation(); });
-      t.addEventListener('mouseenter', () => { showVFeatured(i); stopVRotation(); });
-      t.addEventListener('mouseleave', () => { startVRotation(); });
-      $vGrid.appendChild(t);
+    $vDots.innerHTML = '';
+    vImgs.forEach((_, i) => {
+      const d = document.createElement('span');
+      d.className = 'dot';
+      d.addEventListener('click', () => showVImage(i));
+      $vDots.appendChild(d);
     });
     volunteerInited = true;
   }
-  showVFeatured(0);
-  startVRotation();
+  showVImage(0);
 }
 
 /* ═══════════════════ Global keyboard (presenter) ═══════════════════ */
@@ -2017,11 +2051,11 @@ window.addEventListener('keydown', (e) => {
   if (ADV.includes(e.key)) {
     e.preventDefault();
     if (currentSlide === 0) advance();
-    else if (currentSlide === 1) goTo(0);
+    else if (currentSlide === 1) advanceVolunteer();
   } else if (BACK.includes(e.key)) {
     e.preventDefault();
     if (currentSlide === 0) back();
-    else if (currentSlide === 1) goTo(0);
+    else if (currentSlide === 1) backVolunteer();
   } else if (e.key === 'r' || e.key === 'R') {
     if (currentSlide === 0) { resetTimeline(); runIntro(); }
   } else if (e.key === 'Home') {
